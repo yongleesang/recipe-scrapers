@@ -30,6 +30,9 @@ class BudgetBytes(AbstractScraper):
             self.soup,
             ".wprm-recipe-ingredient-group h4",
             ".wprm-recipe-ingredient",
+            "wprm-recipe-ingredient-amount",
+            "wprm-recipe-ingredient-unit",
+            "wprm-recipe-ingredient-name"
         )
 
     def instructions(self):

@@ -2,7 +2,7 @@
 from ._abstract import AbstractScraper
 from ._grouping_utils import group_ingredients
 from ._utils import get_equipment
-
+from ._utils import get_minutes, get_yields, normalize_string
 
 class BudgetBytes(AbstractScraper):
     @classmethod
@@ -22,8 +22,21 @@ class BudgetBytes(AbstractScraper):
         return self.schema.yields()
 
     def ingredients(self):
-        return self.schema.ingredients()
+        # return self.schema.ingredients()
+        def get_ingredient_text(item, key):
+            span = item.find("span", "wprm-recipe-ingredient-" + key)
+            return normalize_string(span.text) if span else ""
 
+        ingredients_list = []
+        keys = ["amount", "unit", "name"]
+        for item in self.soup.select("li.wprm-recipe-ingredient"):
+            ingredient_parts = [get_ingredient_text(item, key) for key in keys]
+            print(ingredient_parts)
+            #ingredients_list.append(" ".join(filter(None, ingredient_parts)))
+            ingredients_list.append(ingredient_parts)
+            
+        return ingredients_list
+    
     def ingredient_groups(self):
         return group_ingredients(
             self.ingredients(),
